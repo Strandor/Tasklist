@@ -1,4 +1,5 @@
-import { useReducer } from "react";
+import { useReducer, useState } from "react";
+import InfiniteScroll from "react-infinite-scroll-component";
 import { useDispatch, useSelector } from "react-redux";
 import * as Components from "../components";
 import { TaskItem } from "../components/molecules/TaskItem";
@@ -10,23 +11,51 @@ const HomePage = () => {
   const taskLists = useSelector((store: AppStore) => store.taskLists.taskLists);
   const dispatch = useDispatch();
 
-  return (
-    <div className="m-4 flex flex-col gap-10">
-      {taskLists.map((taskList) => (
+  const [noDays, setNoDays] = useState(40);
+
+  const createTaskLists = () => {
+    const reactNodes = [];
+    for (let i = 0; i < noDays; i++) {
+      const date = new Date();
+      date.setHours(0);
+      date.setMinutes(0);
+      date.setSeconds(0);
+      date.setMilliseconds(0);
+      date.setDate(date.getDate() + i);
+
+      const taskListIndex = taskLists.findIndex(
+        (value) => value.date.getTime() === date.getTime()
+      );
+
+      reactNodes.push(
         <TaskList
-          date={taskList.date}
-          onCreateTask={(title) => dispatch(createTask(title, taskList.date))}
+          date={date}
+          onCreateTask={(title) => dispatch(createTask(title, date))}
         >
-          {taskList.taskLists.map((taskItem) => (
-            <TaskItem
-              isChecked={taskItem.completed}
-              title={taskItem.title}
-              onCheck={() => dispatch(toggleCompletionTask(taskItem.id))}
-            />
-          ))}
+          {taskListIndex >= 0 &&
+            taskLists[taskListIndex].taskLists.map((taskItem) => (
+              <TaskItem
+                isChecked={taskItem.completed}
+                title={taskItem.title}
+                onCheck={() => dispatch(toggleCompletionTask(taskItem.id))}
+              />
+            ))}
         </TaskList>
-      ))}
-    </div>
+      );
+    }
+
+    return reactNodes;
+  };
+
+  return (
+    <InfiniteScroll
+      dataLength={noDays}
+      next={() => setNoDays(noDays + 10)}
+      hasMore={true}
+      loader={<h1>Loading</h1>}
+    >
+      {createTaskLists()}
+    </InfiniteScroll>
   );
 };
 

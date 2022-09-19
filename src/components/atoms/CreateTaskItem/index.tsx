@@ -5,6 +5,8 @@ export const CreateTaskItem = ({ onSubmit }: CreateTaskItemProps) => {
   const [value, setValue] = useState("");
 
   const submit = () => {
+    if (value === "") return;
+
     if (onSubmit) onSubmit(value);
     setValue("");
   };
