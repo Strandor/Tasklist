@@ -4,7 +4,7 @@ import * as Components from "../components";
 import { TaskItem } from "../components/molecules/TaskItem";
 import { TaskList } from "../components/organisms";
 import { AppStore } from "../state";
-import { toggleCompletionTask } from "../state/taskLists";
+import { createTask, toggleCompletionTask } from "../state/taskLists";
 
 const HomePage = () => {
   const taskLists = useSelector((store: AppStore) => store.taskLists.taskLists);
@@ -13,7 +13,10 @@ const HomePage = () => {
   return (
     <div className="m-4 flex flex-col gap-10">
       {taskLists.map((taskList) => (
-        <TaskList date={taskList.date}>
+        <TaskList
+          date={taskList.date}
+          onCreateTask={(title) => dispatch(createTask(title, taskList.date))}
+        >
           {taskList.taskLists.map((taskItem) => (
             <TaskItem
               isChecked={taskItem.completed}

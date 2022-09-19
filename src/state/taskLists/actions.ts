@@ -8,3 +8,13 @@ export const toggleCompletionTask = (id: string) => {
     },
   };
 };
+
+export const createTask = (title: string, date: Date) => {
+  return {
+    type: TaskListsActions.CREATE_TASK,
+    payload: {
+      title: title,
+      date: date,
+    },
+  };
+};

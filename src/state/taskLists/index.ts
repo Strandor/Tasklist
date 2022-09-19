@@ -23,6 +23,41 @@ export const taskListsReducer: Reducer<TaskListsState> = (
           return taskItems;
         }),
       };
+    case TaskListsActions.CREATE_TASK:
+      const foundTaskListIndex = state.taskLists.findIndex(
+        (taskList) => taskList.date === action.payload.date
+      );
+      const foundTaskList = state.taskLists[foundTaskListIndex];
+
+      const newTaskList = {
+        id: "",
+        title: action.payload.title,
+        completed: false,
+      };
+
+      if (foundTaskListIndex >= 0) {
+        foundTaskList.taskLists.push(newTaskList);
+
+        return {
+          ...state,
+          taskLists: state.taskLists.map((taskList, index) => {
+            if (index === foundTaskListIndex) return foundTaskList;
+
+            return taskList;
+          }),
+        };
+      } else {
+        return {
+          ...state,
+          taskLists: [
+            ...state.taskLists,
+            {
+              date: action.payload.date,
+              taskLists: [newTaskList],
+            },
+          ],
+        };
+      }
     default:
       return state;
   }
