@@ -1,6 +1,9 @@
 import type { AppProps } from "next/app";
+import { wrapper } from "../state";
 import "../styles/globals.css";
 
-export default function MyApp({ Component, pageProps }: AppProps) {
+function MyApp({ Component, pageProps }: AppProps) {
   return <Component {...pageProps} />;
 }
+
+export default wrapper.withRedux(MyApp);
