@@ -1,17 +1,25 @@
-import { useReducer, useState } from "react";
+import { useEffect, useReducer, useState } from "react";
 import InfiniteScroll from "react-infinite-scroll-component";
 import { useDispatch, useSelector } from "react-redux";
 import * as Components from "../components";
 import { TaskItem } from "../components/molecules/TaskItem";
 import { TaskList } from "../components/organisms";
 import { AppStore } from "../state";
-import { createTask, toggleCompletionTask } from "../state/taskLists";
+import {
+  createTask,
+  fetchTasks,
+  toggleCompletionTask,
+} from "../state/taskLists";
 
 const HomePage = () => {
   const taskLists = useSelector((store: AppStore) => store.taskLists.taskLists);
   const dispatch = useDispatch();
 
   const [noDays, setNoDays] = useState(40);
+
+  useEffect(() => {
+    dispatch(fetchTasks());
+  }, []);
 
   const createTaskLists = () => {
     const reactNodes = [];
@@ -37,7 +45,9 @@ const HomePage = () => {
               <TaskItem
                 isChecked={taskItem.completed}
                 title={taskItem.title}
-                onCheck={() => dispatch(toggleCompletionTask(taskItem.id))}
+                onCheck={(completed) =>
+                  dispatch(toggleCompletionTask(taskItem.id, completed))
+                }
               />
             ))}
         </TaskList>

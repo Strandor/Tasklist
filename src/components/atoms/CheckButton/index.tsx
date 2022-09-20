@@ -9,7 +9,7 @@ export const CheckButton = ({ isChecked, onChange }: CheckButtonProps) => {
       } ${
         isChecked ? "hover:border-secondary" : "hover:border-success"
       } hover:opacity-30 rounded-full`}
-      onClick={() => (onChange ? onChange() : {})}
+      onClick={() => (onChange ? onChange(!isChecked) : {})}
     >
       {isChecked && (
         <img

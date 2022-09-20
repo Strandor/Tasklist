@@ -23,6 +23,41 @@ export const taskListsReducer: Reducer<TaskListsState> = (
           return taskItems;
         }),
       };
+    case TaskListsActions.FETCH_TASKS:
+      const a = action.payload.reduce((pv, cv) => {
+        const foundIndex = pv.findIndex(
+          (value) => cv.deadline.getTime() == value.date.getTime()
+        );
+
+        const newTaskList = {
+          id: cv.id,
+          title: cv.title,
+          completed: cv.completed,
+        };
+
+        if (foundIndex < 0) {
+          return [
+            ...pv,
+            {
+              date: cv.deadline,
+              taskLists: [newTaskList],
+            },
+          ];
+        } else {
+          let taskLists = pv;
+          taskLists[foundIndex].taskLists.push(newTaskList);
+
+          return taskLists;
+        }
+
+        return pv;
+      }, []);
+
+      console.log(a);
+      return {
+        ...state,
+        taskLists: a,
+      };
     case TaskListsActions.CREATE_TASK:
       const foundTaskListIndex = state.taskLists.findIndex(
         (taskList) => taskList.date.getTime() === action.payload.date.getTime()
