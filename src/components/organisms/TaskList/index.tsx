@@ -5,9 +5,7 @@ import { TaskListProps } from "./types";
 export const TaskList = ({ date, children, onCreateTask }: TaskListProps) => {
   return (
     <div>
-      <h4>
-        {date.getDay()}/{date.getMonth()}/{date.getFullYear()}
-      </h4>
+      <h4>{date.toISOString().substring(0, 10)}</h4>
       <div>{children}</div>
       <CreateTaskItem onSubmit={onCreateTask} />
     </div>

@@ -10,6 +10,7 @@ export default async (req: Request, res: Response) => {
       title: taskList.title,
       deadline: taskList.deadline,
       completed: taskList.completed,
+      description: taskList.description,
     }))
   );
 };

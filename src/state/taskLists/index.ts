@@ -10,91 +10,48 @@ export const taskListsReducer: Reducer<TaskListsState> = (
     case TaskListsActions.TOGGLE_TASK_COMPLETION:
       return {
         ...state,
-        taskLists: state.taskLists.map((taskItems) => {
-          const index = taskItems.taskLists.findIndex(
-            (value) => value.id === action.payload.id
-          );
+        taskLists: state.taskLists.map((task) => {
+          if (task.id === action.payload.id)
+            return {
+              ...task,
+              completed: action.payload.completed,
+            };
 
-          if (index >= 0) {
-            taskItems.taskLists[index].completed =
-              !taskItems.taskLists[index].completed;
-          }
-
-          return taskItems;
+          return task;
         }),
       };
-    case TaskListsActions.FETCH_TASKS:
-      const a = action.payload.reduce((pv, cv) => {
-        const foundIndex = pv.findIndex(
-          (value) => cv.deadline.getTime() == value.date.getTime()
-        );
-
-        const newTaskList = {
-          id: cv.id,
-          title: cv.title,
-          completed: cv.completed,
-        };
-
-        if (foundIndex < 0) {
-          return [
-            ...pv,
-            {
-              date: cv.deadline,
-              taskLists: [newTaskList],
-            },
-          ];
-        } else {
-          let taskLists = pv;
-          taskLists[foundIndex].taskLists.push(newTaskList);
-
-          return taskLists;
-        }
-
-        return pv;
-      }, []);
-
-      console.log(a);
+    case TaskListsActions.UPDATE_TASK:
       return {
         ...state,
-        taskLists: a,
+        taskLists: state.taskLists.map((task) => {
+          if (task.id === action.payload.id)
+            return {
+              ...task,
+              ...action.payload,
+            };
+
+          return task;
+        }),
+      };
+
+    case TaskListsActions.FETCH_TASKS:
+      return {
+        ...state,
+        taskLists: action.payload,
       };
     case TaskListsActions.CREATE_TASK:
-      const foundTaskListIndex = state.taskLists.findIndex(
-        (taskList) => taskList.date.getTime() === action.payload.date.getTime()
-      );
-      const foundTaskList = state.taskLists[foundTaskListIndex];
-
       const newTaskList = {
         id: "",
         title: action.payload.title,
         completed: false,
+        deadline: action.payload.deadline,
       };
 
-      console.log(state);
+      return {
+        ...state,
+        taskLists: [...state.taskLists, newTaskList],
+      };
 
-      if (foundTaskListIndex >= 0) {
-        foundTaskList.taskLists.push(newTaskList);
-
-        return {
-          ...state,
-          taskLists: state.taskLists.map((taskList, index) => {
-            if (index === foundTaskListIndex) return foundTaskList;
-
-            return taskList;
-          }),
-        };
-      } else {
-        return {
-          ...state,
-          taskLists: [
-            ...state.taskLists,
-            {
-              date: action.payload.date,
-              taskLists: [newTaskList],
-            },
-          ],
-        };
-      }
     default:
       return state;
   }
