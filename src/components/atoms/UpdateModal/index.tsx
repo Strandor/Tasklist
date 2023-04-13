@@ -6,11 +6,16 @@ export const UpdateModal = ({
   onUpdateTitle,
   onUpdateDeadline,
   onUpdateDescription,
+  onUpdateAsignees,
+  asignees,
   description,
   deadline,
   title,
+  users,
 }: UpdateModalProps) => {
   const [inputTitle, setInputTitle] = useState(title);
+
+  console.log(asignees);
 
   return (
     <div
@@ -53,6 +58,23 @@ export const UpdateModal = ({
               if (onUpdateDeadline) onUpdateDeadline(e.target.valueAsDate);
             }}
           />
+        </div>
+        <div>
+          <div className="text-xs font-bold">ASSIGNEES</div>
+          {users.map((user) => (
+            <div className="flex gap-2">
+              <input
+                type="checkbox"
+                defaultChecked={asignees.findIndex((a) => a === user.id) !== -1}
+                onChange={() => {
+                  if (onUpdateAsignees) {
+                    onUpdateAsignees(user.id);
+                  }
+                }}
+              />
+              <p>{user.name}</p>
+            </div>
+          ))}
         </div>
       </div>
     </div>

@@ -10,12 +10,15 @@ import { AppStore } from "../state";
 import {
   createTask,
   fetchTasks,
+  toggleAssignee,
   toggleCompletionTask,
   updateTask,
 } from "../state/taskLists";
+import { fetchUsers } from "../state/users";
 
 const HomePage = () => {
   const taskLists = useSelector((store: AppStore) => store.taskLists.taskLists);
+  const users = useSelector((store: AppStore) => store.users.users);
   const dispatch = useDispatch();
 
   const [noDays, setNoDays] = useState(40);
@@ -23,6 +26,7 @@ const HomePage = () => {
 
   useEffect(() => {
     dispatch(fetchTasks());
+    dispatch(fetchUsers());
   }, []);
 
   const createTaskLists = () => {
@@ -65,9 +69,14 @@ const HomePage = () => {
     <>
       {selectedTask ? (
         <UpdateModal
+          users={users}
+          asignees={selectedTask.assignees}
           title={selectedTask.title}
           description={selectedTask.description}
           deadline={selectedTask.deadline}
+          onUpdateAsignees={(assignee) => {
+            dispatch(toggleAssignee(selectedTask.id, assignee));
+          }}
           onUpdateTitle={(title) =>
             dispatch(
               updateTask({

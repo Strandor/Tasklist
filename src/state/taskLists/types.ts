@@ -17,4 +17,5 @@ export interface TaskUpdateAction {
   title?: string;
   deadline?: Date;
   description?: string;
+  assignees?: string[];
 }

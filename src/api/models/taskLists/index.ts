@@ -7,6 +7,11 @@ const taskListsSchema = new Schema({
   description: String,
   deadline: Date,
   completed: Boolean,
+  assignees: [
+    {
+      type: String,
+    },
+  ],
 });
 
 export const TaskLists = mongoose.model("taskLists", taskListsSchema);

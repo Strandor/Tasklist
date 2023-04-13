@@ -10,6 +10,32 @@ export const updateTask = (updateTask: TaskUpdateAction) => {
   };
 };
 
+export const toggleAssignee = (id: string, assigneeId: string) => {
+  return (dispatch, getState) => {
+    const state = getState();
+    const taskList = state.taskLists.taskLists.find((a) => a.id == id);
+
+    const containsAssignee =
+      taskList.assignees.findIndex((a) => a == assigneeId) !== -1;
+
+    if (containsAssignee) {
+      dispatch(
+        updateTask({
+          id: id,
+          assignees: taskList.assignees.filter((a) => a !== assigneeId),
+        })
+      );
+    } else {
+      dispatch(
+        updateTask({
+          id: id,
+          assignees: [...taskList.assignees, assigneeId],
+        })
+      );
+    }
+  };
+};
+
 export const toggleCompletionTask = (id: string, completed: boolean) => {
   axios.patch(`/api/taskLists/${id}`, {
     completed: completed,
@@ -35,6 +61,7 @@ export const fetchTasks = () => {
             deadline: new Date(task.deadline),
             completed: task.completed,
             description: task.description,
+            assignees: task.assignees,
           };
         }),
       });

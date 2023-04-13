@@ -11,7 +11,7 @@ export default async (req: Request, res: Response) => {
   }
   const taskList = await Models.TaskLists.findOne({ id: id });
 
-  const { completed, title, deadline, description } = req.body;
+  const { completed, title, deadline, description, assignees } = req.body;
   if (completed) {
     await taskList.update({
       completed: completed,
@@ -33,6 +33,12 @@ export default async (req: Request, res: Response) => {
   if (description) {
     await taskList.update({
       description: description,
+    });
+  }
+
+  if (assignees) {
+    await taskList.update({
+      assignees: assignees,
     });
   }
 

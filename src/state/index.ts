@@ -3,10 +3,12 @@ import thunk from "redux-thunk";
 import { composeWithDevTools } from "redux-devtools-extension";
 import { createWrapper } from "next-redux-wrapper";
 import { taskListsReducer } from "./taskLists";
+import { usersReducer } from "./users";
 
 // initial states here
 export const rootReducer = combineReducers({
   taskLists: taskListsReducer,
+  users: usersReducer,
 });
 
 // middleware
